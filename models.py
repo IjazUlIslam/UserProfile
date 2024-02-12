@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.core.exceptions import ValidationError
 import re
-from django.db.models import Model 
+from django.db.models import Model
 
 
 class CustomUserManager(BaseUserManager):
@@ -63,14 +63,9 @@ class CustomUser(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
-    # x = datetime.datetime.now()
-
-    # def save(self, *args, **kwargs):
-    #     self.full_name = self.first_name + ' ' + self.last_name
-    #     self.login_date = self.x
-    #     super(CustomUser, self).save(*args, **kwargs)
+    
     def clean(self, *args, **kwargs):
-        pattern = '^\+[0-9]+(?:[0-9] ?)*$'
+        pattern = '^[0-9]+(?:[0-9] ?)*$'
         if self.phone_number and not re.match(pattern, self.phone_number):
             raise ValidationError("Invalid phone number format.")
         super().clean(*args, **kwargs)
@@ -78,6 +73,7 @@ class CustomUser(AbstractBaseUser):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
 
 # create DateTime model
 class DateTime(Model):
